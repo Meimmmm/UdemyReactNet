@@ -11,12 +11,21 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 {
     opt.UseSqlite(builder.Configuration.GetConnectionString("defaultConnection"));
 });
+builder.Services.AddCors();
+
+
 
 //ASP.NET Core アプリケーションの構成が完了した後、アプリケーションのインスタンスを生成する
 //app を使って、ミドルウェアの設定、ルーティング設定などを行い、最終的に app.Run() でアプリケーションを実行する
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+// Configure the HTTP request pipeline. !!!ordering does become important in this part!!!
+app.UseCors(opt => 
+{
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
+});
+
 app.MapControllers();
 
 DbInitializer.InitDb(app);

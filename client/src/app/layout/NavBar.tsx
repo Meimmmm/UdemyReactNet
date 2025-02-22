@@ -1,6 +1,8 @@
 import { DarkMode, LightMode, ShoppingCart } from "@mui/icons-material";
-import { AppBar, Badge, Box, IconButton, List, ListItem, Toolbar, Typography } from "@mui/material";
+import { AppBar, Badge, Box, IconButton, LinearProgress, List, ListItem, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { setDarkMode } from "./uiSlice";
 
 const midLinks = [
     { title: 'catatog', path: '/catalog' },
@@ -25,20 +27,26 @@ const navStyles = {
     }
 }
 
-type Props = {
-    darkMode: boolean
-    toggleDarkMode: () => void; //なんでvoid?
-}
+// type Props = {
+//     darkMode: boolean
+//     toggleDarkMode: () => void; //なんでvoid?
+// }
 
-export default function NavBar({ darkMode, toggleDarkMode }: Props) {
+// export default function NavBar({ darkMode, toggleDarkMode }: Props) {
+export default function NavBar() {
     //const darkMode = true;
+    
+    // 読み込みフラグ
+    const {isLoading, darkMode} = useAppSelector(state => state.ui);
+    const dispatch = useAppDispatch();
 
     return (
         <AppBar position="fixed"> {/* fixed to the top of screen */}
             <Toolbar sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Box display='flex' alignItems='center'>
                     <Typography component={NavLink} sx={navStyles} to={'/'} variant="h6">RE-STORE</Typography>
-                    <IconButton onClick={toggleDarkMode}>
+                    {/* <IconButton onClick={toggleDarkMode}> */}
+                    <IconButton onClick={() => dispatch(setDarkMode())}>
                         {darkMode ? <DarkMode /> : <LightMode sx={{ color: 'yellow' }} />}
                     </IconButton>
                 </Box>
@@ -75,6 +83,12 @@ export default function NavBar({ darkMode, toggleDarkMode }: Props) {
                     </List>
                 </Box>
             </Toolbar>
+            {/* 読み込みフラグ */}
+            {isLoading && (
+                <Box sx={{width: '100%'}}>
+                    <LinearProgress color="secondary" />
+                </Box>
+            )}
         </AppBar>
     )
 }

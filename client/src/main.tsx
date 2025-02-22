@@ -7,9 +7,18 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './app/routes/Routes';
+import { Provider } from 'react-redux';
+import { store } from './app/store/store';
+
+//Reduxストアのインスタンスを作成。この関数は、store.tsファイルで定義されている
+//const store = configureTheStore();
+//console.log(store.getState());
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    {/* Providerコンポーネントを使って、Reactアプリケーション全体をReduxストアに接続 */}
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 )
